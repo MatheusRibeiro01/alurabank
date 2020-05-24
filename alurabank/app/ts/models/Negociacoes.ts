@@ -10,9 +10,13 @@ export class Negociacoes {
         this._negociacoes.push(negociacao);
     }
 
-    @logarTempoDeExecução()
     paraArray(): Negociacao[]{
 
         return ([] as Negociacao[]).concat(this._negociacoes);
+    }
+
+    paraTexto(): void{
+
+        console.log(JSON.stringify(this._negociacoes));
     }
 }
