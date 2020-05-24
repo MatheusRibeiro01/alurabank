@@ -44,7 +44,9 @@ export class NegociacaoController {
         );
 
         this._negociacoes.adiciona(negociacao);
+
         imprime(negociacao, this._negociacoes);
+
         this._negociacoesView.update(this._negociacoes);
         this._mensagemView.update('Negociação adicionada com sucesso');
     }
@@ -64,13 +66,23 @@ export class NegociacaoController {
                     throw new Error(res.statusText);
                 }
             })
-            .then(negociacoes => {
+            //impedindo que negociações duplicadas sejam importadas
+            .then(negociacoesParaImportar => {
 
-                negociacoes.forEach(negociacao =>
+                const negociacoesJaImportadas = this._negociacoes.paraArray();
+
+                negociacoesParaImportar
+                    .filter(negociacao =>
+                        !negociacoesJaImportadas.some(jaImportada =>
+                            negociacao.ehIgual(jaImportada)))
+                    .forEach(negociacao =>
                     this._negociacoes.adiciona(negociacao));
 
                 this._negociacoesView.update(this._negociacoes);
-            });
+            })
+            .catch(err =>{
+                this._mensagemView.update(err.message);
+            })
     }
 }
 
